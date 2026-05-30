@@ -1,0 +1,376 @@
+{
+  "slug": "supplier-email-parser",
+  "name": "Supplier Email Parser",
+  "domain": "Supply Chain / Procurement",
+  "target_user": "Domain operator, business owner, analyst, or team member who needs this workflow executed reliably.",
+  "core_job": "Supplier thread → structured PO/procurement data",
+  "deep_features": [
+    "item/quantity/price extraction",
+    "date normalization",
+    "discrepancy detection",
+    "PO draft",
+    "supplier memory",
+    "payment term extraction",
+    "approval workflow"
+  ],
+  "input_schema": [
+    {
+      "key": "supplier_thread",
+      "label": "Supplier thread",
+      "type": "text",
+      "required": true,
+      "help": "Affects input: Supplier thread.",
+      "affects": [
+        "prompt",
+        "workflow"
+      ],
+      "default": ""
+    },
+    {
+      "key": "work_brief",
+      "label": "Work brief / source text / URL / instructions",
+      "type": "textarea",
+      "required": true,
+      "default": "",
+      "help": "Paste the material, URL, description, or instruction needed for this project.",
+      "affects": [
+        "prompt",
+        "workflow"
+      ]
+    }
+  ],
+  "customization_schema": [
+    {
+      "key": "execution_mode",
+      "label": "Execution mode",
+      "type": "select",
+      "required": false,
+      "options": [
+        "Draft",
+        "Production",
+        "Audit / strict review",
+        "JSON/API output"
+      ],
+      "default": "Production",
+      "help": "Controls strictness, depth, and output format for this project workflow.",
+      "affects": [
+        "workflow",
+        "validation",
+        "export"
+      ]
+    },
+    {
+      "key": "currency",
+      "label": "currency",
+      "type": "select",
+      "required": false,
+      "help": "Affects customization: currency.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "options": [
+        "USD",
+        "EUR",
+        "GBP",
+        "EGP",
+        "AED",
+        "SAR",
+        "USDT"
+      ],
+      "default": "USD"
+    },
+    {
+      "key": "units",
+      "label": "units",
+      "type": "text",
+      "required": false,
+      "help": "Affects customization: units.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "default": ""
+    },
+    {
+      "key": "supplier_profiles",
+      "label": "supplier profiles",
+      "type": "select",
+      "required": false,
+      "help": "Affects customization: supplier profiles.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "default": ""
+    },
+    {
+      "key": "po_template",
+      "label": "PO template",
+      "type": "text",
+      "required": false,
+      "help": "Affects customization: PO template.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "default": ""
+    },
+    {
+      "key": "tolerance_rules",
+      "label": "tolerance rules",
+      "type": "slider",
+      "required": false,
+      "help": "Affects customization: tolerance rules.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "min": 0,
+      "max": 100,
+      "default": 50
+    },
+    {
+      "key": "payment_terms",
+      "label": "payment terms",
+      "type": "text",
+      "required": false,
+      "help": "Affects customization: payment terms.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "default": ""
+    },
+    {
+      "key": "approval_policy",
+      "label": "approval policy",
+      "type": "text",
+      "required": false,
+      "help": "Affects customization: approval policy.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "default": ""
+    },
+    {
+      "key": "output_format",
+      "label": "output format",
+      "type": "select",
+      "required": false,
+      "help": "Affects customization: output format.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "options": [
+        "Markdown",
+        "JSON",
+        "CSV",
+        "PDF",
+        "DOCX",
+        "XLSX"
+      ],
+      "default": "Markdown"
+    },
+    {
+      "key": "language",
+      "label": "language",
+      "type": "select",
+      "required": false,
+      "help": "Affects customization: language.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "options": [
+        "English",
+        "Arabic",
+        "Egyptian Arabic",
+        "French",
+        "German",
+        "Spanish"
+      ],
+      "default": "English"
+    },
+    {
+      "key": "privacy_mode",
+      "label": "privacy mode",
+      "type": "select",
+      "required": false,
+      "help": "Affects customization: privacy mode.",
+      "affects": [
+        "prompt",
+        "validation",
+        "workflow",
+        "export"
+      ],
+      "options": [
+        "cloud allowed",
+        "local only",
+        "redact sensitive data"
+      ],
+      "default": "cloud allowed"
+    },
+    {
+      "key": "confidence_threshold",
+      "label": "Confidence threshold",
+      "type": "slider",
+      "required": false,
+      "min": 0,
+      "max": 100,
+      "default": 75,
+      "help": "Items below this confidence are escalated to the human review queue.",
+      "affects": [
+        "validation",
+        "workflow",
+        "export"
+      ]
+    }
+  ],
+  "workflow_steps": [
+    "Supplier thread",
+    "structured PO/procurement data"
+  ],
+  "ui_panels": [
+    "email thread import",
+    "extracted PO",
+    "discrepancy cards",
+    "supplier profile",
+    "export"
+  ],
+  "output_formats": [
+    "PO draft",
+    "procurement JSON",
+    "discrepancy report",
+    "ERP CSV"
+  ],
+  "integrations": [
+    "File upload",
+    "REST API",
+    "Export download",
+    "Job history",
+    "Email/ERP optional"
+  ],
+  "guardrails": [
+    "Show uncertainty and confidence",
+    "Cite evidence from input when possible",
+    "Human review required for legal, medical, financial, hiring, or security decisions",
+    "Do not invent facts absent from input"
+  ],
+  "recommended_models": {
+    "drafting": "fast cloud or local instruct model",
+    "reasoning": "strong reasoning model",
+    "private_documents": "local model via Ollama/LM Studio/vLLM",
+    "vision_or_pdf": "vision-capable model when image pages are used"
+  },
+  "suite": "Supply Chain Suite",
+  "implementation_status": "real_local_engine_registered",
+  "analysis_modules": [
+    "email_thread_parse",
+    "supply_doc_parse",
+    "po_match"
+  ],
+  "output_sections": [
+    "Supplier fields",
+    "Quote terms",
+    "PO actions",
+    "Follow-up email"
+  ],
+  "field_validations": [
+    {
+      "field": "currency",
+      "rule": "Normalize currency symbol/code and flag mixed-currency documents."
+    },
+    {
+      "field": "language",
+      "rule": "Preserve requested language in final deliverable unless source text requires bilingual output."
+    }
+  ],
+  "scorecards": [
+    "Document completeness",
+    "Match confidence",
+    "Compliance risk",
+    "Shipment discrepancy",
+    "ERP readiness"
+  ],
+  "automation_hooks": [
+    {
+      "name": "save_job_snapshot",
+      "type": "internal",
+      "description": "Persist inputs, customization, uploads, output, and usage for audit/history."
+    },
+    {
+      "name": "export_pack",
+      "type": "internal",
+      "description": "Export Markdown, JSON, PDF, and DOCX from the completed job."
+    },
+    {
+      "name": "human_review_queue",
+      "type": "manual",
+      "description": "Flag low-confidence, legal/medical/finance/security/compliance-sensitive items for human review."
+    }
+  ],
+  "ux_profile": {
+    "name": "Supply Chain Operations Desk",
+    "accent": "#fdba74",
+    "layout": "Document/email intake → matching → discrepancy/risk → action/export",
+    "hero": "Operations UX for purchase, supplier, warehouse, customs, and document reconciliation workflows.",
+    "components": [
+      "Document matching board",
+      "Shipment/procurement checklist",
+      "Discrepancy table",
+      "Supplier action panel",
+      "Export package"
+    ],
+    "metrics": [
+      "Match confidence",
+      "Discrepancies",
+      "Compliance risk",
+      "Action readiness"
+    ],
+    "quick_actions": [
+      "Match documents",
+      "Find discrepancies",
+      "Prepare supplier email",
+      "Build export package"
+    ],
+    "review_lanes": [
+      "Receive",
+      "Match",
+      "Validate",
+      "Resolve",
+      "Export"
+    ],
+    "empty_state": "Upload supply-chain documents or paste supplier emails. Customs/live carrier data requires real connectors.",
+    "icon": "🚚",
+    "project_slug": "supplier-email-parser",
+    "domain": "Supply Chain / Procurement"
+  },
+  "final_gui_status": {
+    "standalone_folder_gui": true,
+    "domain_specific_ux_profile": true,
+    "elegant_component_system": true,
+    "no_fake_live_data_policy": true,
+    "requires_real_connectors_for_external_actions": true
+  }
+}
